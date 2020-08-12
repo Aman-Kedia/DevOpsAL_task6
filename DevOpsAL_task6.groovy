@@ -1,4 +1,7 @@
 job('Job1') {
+    triggers {
+        upstream('Admin(Seed)', 'SUCCESS')
+    }
     scm{
         github('Aman-Kedia/DevOpsAL_task3' , 'master')
     }
@@ -48,11 +51,11 @@ job('Job2') {
     
 }
 
-job('Job3'){
+job('Job3') {
     triggers {
         upstream('Job2', 'SUCCESS')
     }
-    steps{
+    steps {
         shell('''
             status=$(curl -o /dev/null -sw "%{http_code}" 192.168.99.100:30001)
             if [[ $status == 200 ]]
@@ -63,18 +66,18 @@ job('Job3'){
             fi
         ''')
     }
-    publishers{
-        extendedEmail{
+    publishers {
+        extendedEmail {
             recipientList('amankedia1402@gmail.com')
             defaultSubject('Job status')
             attachBuildLog(attachBuildLog = true)
             defaultContent('Status Report')
             contentType('text/html')
-            triggers{
-                failure{
+            triggers {
+                failure {
                     subject('build Status')
                     content('Body')
-                    sendTo{
+                    sendTo {
                         developers()
                         recipientList()
                     }
