@@ -6,7 +6,7 @@ job('Job1') {
         githubPush()
     }
     steps {
-        shell('sudo cp -rvf * /root/DevOpsAL_task6')
+        shell('sudo cp -rvf * /root/DevOpsAL_task6/')
     }
 }
 
@@ -27,7 +27,7 @@ job('Job2') {
                 
                 kubectl create -f /root/DevOpsAL_task6/html-pvc.yml
                 sleep 3
-                pod=$(kubectl get pods -l env-production --output=jsonpath={.items[0]..metadata.name} | grep html-deploy)
+                pod=$(kubectl get pods -l env=production --output=jsonpath={.items[0]..metadata.name} | grep html-deploy)
                 kubectl cp /root/DevOpsAL_task6/*.html $pod:/usr/local/apache2/htdocs/
             fi 
 
@@ -40,7 +40,7 @@ job('Job2') {
                 
                 kubectl create -f /root/DevOpsAL_task6/php-pvc.yml
                 sleep 3
-                pod=$(kubectl get pods -l env-production --output=jsonpath={.items[0]..metadata.name} | grep php-deploy)
+                pod=$(kubectl get pods -l env=production --output=jsonpath={.items[0]..metadata.name} | grep php-deploy)
                 kubectl cp /root/DevOpsAL_task6/*.php $pod:/var/www/html/
             fi
         ''') 
@@ -54,7 +54,7 @@ job('Job3'){
     }
     steps{
         shell('''
-            status=$(curl -o /dev/null -sw &quot;%{http_code}&quot; 192.168.99.100:30001)
+            status=$(curl -o /dev/null -sw "%{http_code}" 192.168.99.100:30001)
             if [[ $status == 200 ]]
             then
                 exit 0
@@ -71,7 +71,7 @@ job('Job3'){
             defaultContent('Status Report')
             contentType('text/html')
             triggers{
-                always{
+                faliure{
                     subject('build Status')
                     content('Body')
                     sendTo{
