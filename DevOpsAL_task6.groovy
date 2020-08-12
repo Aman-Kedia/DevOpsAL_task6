@@ -71,7 +71,7 @@ job('Job3'){
             defaultContent('Status Report')
             contentType('text/html')
             triggers{
-                faliure{
+                failure{
                     subject('build Status')
                     content('Body')
                     sendTo{
